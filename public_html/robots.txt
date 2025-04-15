@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /administracion/
+Allow: /
+Sitemap: https://www.galeriacafelibro.com.co/sitemap.xml

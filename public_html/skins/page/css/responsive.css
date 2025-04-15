@@ -1,0 +1,32 @@
+@media (max-width: 1600px) {
+  nav.header .nav-info {
+    font-size: 15px;
+  }
+  nav.header .nav-icon {
+    font-size: 0.8rem;
+  }
+  nav.header .nav-icon svg {
+    width: 30px;
+    height: auto;
+    fill: #1dc9a3;
+  }
+  nav.header .nav-row ul li .nav-link {
+    font-size: 1.2rem;
+  }
+
+  nav.headerHome .nav-info {
+    font-size: 15px;
+  }
+  nav.headerHome .nav-icon {
+    font-size: 0.8rem;
+  }
+  nav.headerHome .nav-icon svg {
+    width: 30px;
+    height: auto;
+    fill: #1dc9a3;
+  }
+  nav.headerHome .nav-row ul li .nav-link {
+    font-size: 1.2rem;
+  }
+}/*# sourceMappingURL=responsive.css.map */
+
