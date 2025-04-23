@@ -33,10 +33,10 @@ $anio = $fecha->format('Y');
       <h1><?= $this->compra->programacion_nombre ?></h1>
       <h2 class="mt-3">Identificador de la compra: <span><?= $this->compra->boleta_compra_id ?></span></h2>
       <div class="info">
-        <h3 class="mt-3">Código del ticket: <span><?= $this->ticketInfo->ticket_uid ?></span></h3>
+        <h3 class="mt-3">Código del <?= $this->compra->programacion_bono==1 ? 'bono:' : 'ticket:'?> <span><?= $this->ticketInfo->ticket_uid ?></span></h3>
         <h3 class="mt-3">Fecha del evento: <span><?= $this->compra->programacion_fecha ?></span></h3>
         <h4 class="mt-3">
-          Tickets validados/Tickets de la compra
+        <?= $this->compra->programacion_bono==1 ? 'Bonos' : 'Tickets'?> validados/<?= $this->compra->programacion_bono==1 ? 'Bonos' : 'Tickets'?> de la compra
           <span><?= $this->ticketsValidados ?>/<?= $this->ticketsTodos ?></span>
         </h4>
       </div>
@@ -62,15 +62,15 @@ $anio = $fecha->format('Y');
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title" id="exampleModalLabel">
-                    Validar ticket
+                    Validar <?= $this->compra->programacion_bono==1 ? 'bono' : 'ticket'?>
                   </h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                  <p>¿Está seguro de validar el ticket?</p>
-                  <p class="text-danger">Recuerde que una vez validado no podrá volver a validar el ticket.</p>
+                  <p>¿Está seguro de validar el <?= $this->compra->programacion_bono==1 ? 'bono:' : 'ticket:'?>?</p>
+                  <p class="text-danger">Recuerde que una vez validado no podrá volverlo a validar.</p>
                 </div>
                 <div class="modal-footer justify-content-center">
                   <button type="button" class="btn btn-outline-secondary w-100" data-dismiss="modal">Cancelar</button>

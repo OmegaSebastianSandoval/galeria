@@ -291,7 +291,7 @@ $(document).ready(function () {
         
 
         $("#modalGraficaLabel").text(
-          `Información tickets evento: ${res.programacion_nombre}`
+          `Información ${res.programacion_bono===1 ? 'bono:' : 'tickets evento:'} ${res.programacion_nombre}`
         );
 
         // Si ambos son 0, no hay datos para mostrar
@@ -343,7 +343,7 @@ $(document).ready(function () {
               },
               title: {
                 display: true,
-                text: "Tickets Validados vs No Validados",
+                text: `${res.programacion_bono===1 ? 'Bonos' : 'Tickets'} validados vs No validados`,
               },
               datalabels: {
                 color: "#000",

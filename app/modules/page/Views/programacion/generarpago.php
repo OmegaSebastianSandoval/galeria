@@ -11,7 +11,7 @@
             data-epayco-name-billing="<?php echo $this->nombre; ?>"
             data-epayco-mobilephone-billing=""
             data-epayco-number-doc-billing="<?php echo $this->cedula; ?>"
-            data-epayco-test="true"
+            data-epayco-test="false"
             data-epayco-autoclick="true"
             data-epayco-external="false"
             data-epayco-extra1="<?php echo $this->idboleta; ?>"

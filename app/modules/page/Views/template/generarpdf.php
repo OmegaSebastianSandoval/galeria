@@ -81,9 +81,9 @@ $nombre = $this->infoVenta->boleta_compran_nombre;
       <br>
       <br>
 
-      <table border="0" valign="top" align="center"  width="90%">
+      <table border="0" valign="top" align="center" width="90%">
         <tr>
-          <td width="70%"align="right">
+          <td width="70%" align="right">
             <br>
             <br>
             <br>
@@ -96,17 +96,25 @@ $nombre = $this->infoVenta->boleta_compran_nombre;
           <!-- Celda con el identificador -->
           <td width="30%">
             <img src="<?= IMAGE_QRS_PATH . $this->ticket->ticket_uid . ".png" ?>" alt="qr" width="140" height="140" />
-           
+
           </td>
         </tr>
       </table>
 
-
+      <br>
+      <br>
       <div style="font-size: 16px; color: #FFF;">
-        El ingreso es únicamente para mayores de 18 años<br />
-        Te recomendamos llegar al teatro 30 minutos antes de la función<br />
-        Te recordamos que solo se permite el ingreso al teatro hasta 10 minutos después de iniciada la función<br />
-        Dudas o problemas puedes escribir a nuestro PQR (+57) 3045538387
+        <?php if ($this->infoVenta->programacion_bono == 1) { ?>
+          El ingreso es únicamente para mayores de 18 años.<br />
+          Te recomendamos llegar al teatro 30 minutos antes de la función.<br />
+          Te recordamos que solo se permite el ingreso al teatro hasta 10 minutos después de iniciada la función.<br />
+          Dudas o problemas puedes escribir a nuestro PQR (+57) 3045538387.
+        <?php } else { ?>
+          El ingreso es únicamente para mayores de 18 años.<br />
+          Te recomendamos llegar al teatro 30 minutos antes de la función.<br />
+          Te recordamos que solo se permite el ingreso al teatro hasta 10 minutos después de iniciada la función.<br />
+          Dudas o problemas puedes escribir a nuestro PQR (+57) 3045538387.
+        <?php }   ?>
       </div>
     </td>
   </tr>

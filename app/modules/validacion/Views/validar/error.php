@@ -29,9 +29,9 @@ switch ($this->tipoError) {
         <i class="fa-solid fa-arrow-left"></i> Volver al inicio
       </a>
       <div class="alert alert-danger">
-        <h2 class="text-center">Error al validar el ticket</h2>
-        <p class="text-center">El ticket no se encuentra en la base de datos o ya ha sido validado.</p>
-        <p class="text-center">Por favor, verifique el código del ticket e intente nuevamente.</p>
+        <h2 class="text-center">Error al validar el <?= $this->compra->programacion_bono==1 ? 'bono' : 'ticket'?></h2>
+        <p class="text-center">El <?= $this->compra->programacion_bono==1 ? 'bono' : 'ticket'?> no se encuentra en la base de datos o ya ha sido validado.</p>
+        <p class="text-center">Por favor, verifique el código del <?= $this->compra->programacion_bono==1 ? 'bono' : 'ticket'?> e intente nuevamente.</p>
       </div>
     </div>
     <?php break; ?>
@@ -51,14 +51,14 @@ switch ($this->tipoError) {
           <h1><?= $this->compra->programacion_nombre ?></h1>
           <h2 class="mt-3 d-none">Identificador de la compra: <span><?= $this->compra->boleta_compra_id ?></span></h2>
           <div class="info mt-4">
-            <h3 class="mt-3 d-none">Código del ticket: <span><?= $this->ticketInfo->ticket_uid ?></span></h3>
+            <h3 class="mt-3 d-none">Código del <?= $this->compra->programacion_bono==1 ? 'bono' : 'ticket'?>: <span><?= $this->ticketInfo->ticket_uid ?></span></h3>
             <h3 class="mt-3 d-none">Fecha del evento: <span><?= $this->compra->programacion_fecha ?></span></h3>
 
           </div>
 
           <div class="info-validacion">
             <?php if ($this->ticketInfo->ticket_estado == 2) { ?>
-              <h4>Estado del ticket: <span><?= $this->estadoTicket ?></span></h4>
+              <h4>Estado del <?= $this->compra->programacion_bono==1 ? 'bono' : 'ticket'?>: <span><?= $this->estadoTicket ?></span></h4>
               <h4>Fecha de la validación: <span><?= $this->ticketInfo->ticket_fecha_validacion ?></span></h4>
             <?php } else { ?>
 
@@ -76,9 +76,9 @@ switch ($this->tipoError) {
         <i class="fa-solid fa-arrow-left"></i> Volver a eventos
       </a>
       <div class="alert alert-danger">
-        <h2 class="text-center">Error al validar el ticket</h2>
-        <p class="text-center">El ticket no se encuentra en la base de datos o ya ha sido validado.</p>
-        <p class="text-center">Por favor, verifique el código del ticket e intente nuevamente.</p>
+        <h2 class="text-center">Error al validar el <?= $this->compra->programacion_bono==1 ? 'bono' : 'ticket'?></h2>
+        <p class="text-center">El <?= $this->compra->programacion_bono==1 ? 'bono' : 'ticket'?> no se encuentra en la base de datos o ya ha sido validado.</p>
+        <p class="text-center">Por favor, verifique el código del <?= $this->compra->programacion_bono==1 ? 'bono' : 'ticket'?> e intente nuevamente.</p>
       </div>
       <?php break; ?>
   <?php

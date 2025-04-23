@@ -106,7 +106,7 @@
 						<td>Imagen</td>
 						<td>Lugar</td>
 
-						<td width="">Tickes validados/Tickets totales</td>
+						<td width="">Validados/Totales</td>
 						<td></td>
 					</tr>
 				</thead>

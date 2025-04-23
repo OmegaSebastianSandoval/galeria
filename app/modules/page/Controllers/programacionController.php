@@ -452,10 +452,10 @@ class Page_programacionController extends Page_mainController
 
 	
 		// $id = 19038;
-		 $id = 19040;
+		/*  $id = 19040;
 		$id = 19046;
-		$id = 19049;
-		// $id = 19053;
+		$id = 19049; */
+		$id = 19837;
 
 		$this->enviarBoleteria($id);
 	}
@@ -523,7 +523,11 @@ class Page_programacionController extends Page_mainController
 				"telefono" => $infoVenta->boleta_compra_telefono,
 				"estado" => $ticket->ticket_estado,
 			];
-			$this->generarpdfs($infoVenta, $ticket);
+			if($infoVenta->programacion_bono==1){
+				$this->generarpdfs($infoVenta, $ticket);
+			}else{
+				$this->generarpdfs($infoVenta, $ticket);
+			}
 		}
 
 		$logModel = new Administracion_Model_DbTable_Log();
@@ -533,9 +537,6 @@ class Page_programacionController extends Page_mainController
 		$logModel->insert($dataLog);
 		$email = new Core_Model_Sendingemail($this->_view);
 		$email->generarCorreoBoleteria($infoVenta, $qrsGenerados);
-		/* echo "<pre>";
-		print_r($qrsGenerados);
-		echo "</pre>"; */
 	}
 	public  function generarQR($uid, $token)
 	{
@@ -564,13 +565,7 @@ class Page_programacionController extends Page_mainController
 		$this->setLayout('blanco');
 		$this->_view->ticket = $ticket;
 		$this->_view->infoVenta = $infoVenta;
-		// print_r($ticket);
 
-
-		/* 	echo "<pre>";
-			print_r($infoVenta);
-			echo "</pre>";
- */
 		// Crear nueva instancia de TCPDF
 		$pdf = new MYPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
@@ -605,10 +600,10 @@ class Page_programacionController extends Page_mainController
 	{
 
 		$boletaModel = new Page_Model_DbTable_Boletacompra();
-		$idTest = $this->_getSanitizedParam("idTest");
+		/* $idTest = $this->_getSanitizedParam("idTest");
 		if ($idTest) {
 			$id = $idTest;
-		}
+		} */
 		$content = $boletaModel->getById($id);
 
 		// print_r($content);

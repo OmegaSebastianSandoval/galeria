@@ -117,8 +117,53 @@ class Administracion_programacionController extends Administracion_mainControlle
 		$this->_view->lists = $this->mainModel->getListPages("$filters AND programacion_tipoevento is null", $order, $start, $amount);
 		$this->_view->csrf_section = $this->_csrf_section;
 	}
-
 	public function infoticektsAction()
+	{
+			$this->route = "/administracion/programacion/infoticekts";
+			$this->_view->route = $this->route;
+	
+			$title = "Administración de programacion";
+			$this->getLayout()->setTitle($title);
+			$this->_view->titlesection = $title;
+	
+			$this->filters();
+			$this->_view->csrf = Session::getInstance()->get('csrf')[$this->_csrf_section];
+			$filters = (object)Session::getInstance()->get($this->namefilter);
+			$this->_view->filters = $filters;
+	
+			$filters = $this->getFilter();
+			$order = "orden DESC, programacion_bono DESC";
+	
+			// Calcular paginación
+			$amount = $this->pages;
+			$page = $this->_getSanitizedParam("page");
+			if (!$page && Session::getInstance()->get($this->namepageactual)) {
+					$page = Session::getInstance()->get($this->namepageactual);
+					$start = ($page - 1) * $amount;
+			} else if (!$page) {
+					$start = 0;
+					$page = 1;
+					Session::getInstance()->set($this->namepageactual, $page);
+			} else {
+					Session::getInstance()->set($this->namepageactual, $page);
+					$start = ($page - 1) * $amount;
+			}
+	
+			// Total de registros con al menos un ticket
+			$total = $this->mainModel->getTotalConTickets("$filters")[0]->total;
+			
+			// Lista paginada
+			$list = $this->mainModel->getListPagesConTickets("$filters", $order, $start, $amount);
+	
+			$this->_view->register_number = $total;
+			$this->_view->pages = $this->pages;
+			$this->_view->totalpages = ceil($total / $amount);
+			$this->_view->page = $page;
+			$this->_view->lists = $list;
+			$this->_view->csrf_section = $this->_csrf_section;
+	}
+	
+	public function infoticektsOLDAction()
 	{
 
 		$this->route = "/administracion/programacion/infoticekts";
@@ -132,10 +177,9 @@ class Administracion_programacionController extends Administracion_mainControlle
 		$filters = (object)Session::getInstance()->get($this->namefilter);
 		$this->_view->filters = $filters;
 		$filters = $this->getFilter();
-		$order = "orden DESC";
+		$order = "orden DESC, programacion_bono DESC";
 
-
-		$list = $this->mainModel->getList("$filters AND programacion_tipoevento is null", $order);
+		$list = $this->mainModel->getList("$filters AND programacion_tipoevento is null ", $order);
 		$ticketsModel = new Administracion_Model_DbTable_Tickets();
 
 		$listWithTickets = [];
@@ -168,7 +212,7 @@ class Administracion_programacionController extends Administracion_mainControlle
 		$this->_view->pages = $this->pages;
 		$this->_view->totalpages = ceil(count($listWithTickets) / $amount);
 		$this->_view->page = $page;
-		$lists = array_slice($listWithTickets, $start, $amount);
+		$lists = $this->mainModel->getListPages("$filters AND programacion_tipoevento IS NULL", $order, $start, $amount);
 
 		$ticketsModel = new Administracion_Model_DbTable_Tickets();
 		foreach ($lists  as $evento) {
@@ -191,6 +235,7 @@ class Administracion_programacionController extends Administracion_mainControlle
 
 		$res = array(
 			'programacion_nombre' => mb_convert_encoding($evento->programacion_nombre, 'ISO-8859-1', 'UTF-8'),
+			'programacion_bono' => (int)$evento->programacion_bono,
 			'ticketsValidados' => $ticketsValidados,
 			'ticketsTodos' => $ticketsTodos
 		);
