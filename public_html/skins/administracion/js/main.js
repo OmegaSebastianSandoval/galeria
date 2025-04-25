@@ -284,54 +284,105 @@ $(document).ready(function () {
       dataType: "json",
       success: function (res) {
         console.log(res);
-
-        const validados = +res.ticketsValidados;
-        const allTickets = +res.ticketsTodos;
-        const noValidados = allTickets - validados;
-        
-
+    
+        const tickets = res.ticketsEvento;
+    
+        const tiposBoleta = {};
+    
+        tickets.forEach(ticket => {
+          const tipo = ticket.boleta_tipo_nombre || "Otro";
+          if (!tiposBoleta[tipo]) {
+            tiposBoleta[tipo] = { total: 0, validados: 0 };
+          }
+          tiposBoleta[tipo].total++;
+          if (ticket.ticket_estado == 2) {
+            tiposBoleta[tipo].validados++;
+          }
+        });
+    
+        const coloresBase = [
+          "54, 162, 235",  // Azul
+          "255, 206, 86",  // Amarillo
+          "75, 192, 192",  // Turquesa
+          "153, 102, 255", // Morado
+          "255, 159, 64",  // Naranja
+          "255, 99, 132",  // Rosado
+          "46, 144, 119",  // Verde
+        ];
+    
+        const labels = [];
+        const data = [];
+        const backgroundColors = [];
+        let colorIndex = 0;
+    
+        Object.keys(tiposBoleta).forEach(tipo => {
+          const { total, validados } = tiposBoleta[tipo];
+          const noValidados = total - validados;
+    
+          const color = coloresBase[colorIndex % coloresBase.length]; // para que nunca se acaben
+    
+          if (validados > 0) {
+            labels.push(`${tipo} - Validados`);
+            data.push(validados);
+            backgroundColors.push(`rgba(${color}, 0.7)`); // color más claro
+          }
+          if (noValidados > 0) {
+            labels.push(`${tipo} - No Validados`);
+            data.push(noValidados);
+            backgroundColors.push(`rgba(${color}, 0.4)`); // color más suave
+          }
+    
+          colorIndex++;
+        });
+    
+        const allTickets = tickets.length;
+        const validadosTotal = tickets.filter(t => t.ticket_estado == 2).length;
+        const noValidadosTotal = allTickets - validadosTotal;
+    
         $("#modalGraficaLabel").text(
-          `Información ${res.programacion_bono===1 ? 'bono:' : 'tickets evento:'} ${res.programacion_nombre}`
+          `Información ${res.programacion_bono === 1 ? 'bono:' : 'tickets evento:'} ${res.programacion_nombre}`
         );
-
-        // Si ambos son 0, no hay datos para mostrar
-        if (validados === 0 && allTickets === 0) {
+    
+        if (allTickets === 0) {
           $("#sinDatosMsg").show();
           $("#ticketsgrafica").hide();
           return;
         }
-
-        // Oculta mensaje si hay datos y muestra el canvas
+    
         $("#sinDatosMsg").hide();
         $("#ticketsgrafica").show();
-        $("#resumenTickets")
-        .html(
-          `Totales: ${allTickets} | Validados: ${validados} | No validados: ${noValidados}`
-        )
-        .show();
+    
+        // Resumen bonito
+        let resumenHTML = `Totales: ${allTickets} | Validados: ${validadosTotal} | No validados: ${noValidadosTotal}<br><br>`;
+        resumenHTML += `<strong>Detalles por tipo de boleta:</strong><br>`;
+        resumenHTML += '<div class="text-start w-75 m-auto fw-light mt-3">';
+        Object.keys(tiposBoleta).forEach((label) => {
+          const totalTipo = tiposBoleta[label].total;
+          const validadosTipo = tiposBoleta[label].validados;
+          const noValidadosTipo = totalTipo - validadosTipo;
+          resumenHTML += `• <span>${label}: ${validadosTipo} validados, ${noValidadosTipo} no validados de ${totalTipo} total</span><br>`;
+        });
+        resumenHTML += "</div>";
+    
+        $("#resumenTickets").html(resumenHTML).show();
+    
         const datos = {
-          labels: ["Validados", "No Validados"],
-          datasets: [
-            {
-              label: "Tickets",
-              data: [validados, noValidados],
-              backgroundColor: [
-                "rgba(46, 144, 119, 0.5)", // Validados (suave)
-                "rgba(252, 54, 3, 0.5)", // No validados (suave)
-              ],
-              borderColor: ["rgba(46, 144, 119, 1)", "rgba(252, 54, 3, 1)"],
-              borderWidth: 1,
-            },
-          ],
+          labels: labels,
+          datasets: [{
+            label: "Tickets",
+            data: data,
+            backgroundColor: backgroundColors,
+            borderColor: backgroundColors.map(c => c.replace("0.7", "1").replace("0.4", "1")),
+            borderWidth: 1,
+          }],
         };
-
+    
         const ctx = document.getElementById("ticketsgrafica").getContext("2d");
-
-        // Destruir la gráfica anterior si ya existe
+    
         if (window.myChart) {
           window.myChart.destroy();
         }
-
+    
         window.myChart = new Chart(ctx, {
           type: "pie",
           data: datos,
@@ -343,7 +394,7 @@ $(document).ready(function () {
               },
               title: {
                 display: true,
-                text: `${res.programacion_bono===1 ? 'Bonos' : 'Tickets'} validados vs No validados`,
+                text: `${res.programacion_bono === 1 ? 'Bonos' : 'Tickets'} Validados vs No Validados por Tipo de Boleta`,
               },
               datalabels: {
                 color: "#000",
@@ -357,10 +408,13 @@ $(document).ready(function () {
               },
             },
           },
-          plugins: [ChartDataLabels], // 👈 activa el plugin
+          plugins: [ChartDataLabels],
         });
-      },
+      }
     });
+    
+    
+    
   });
   $("#modalGrafica").on("hide.bs.modal", function (event) {
     $("#modalGraficaLabel").text("");

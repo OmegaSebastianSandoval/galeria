@@ -64,57 +64,42 @@ $nombre = $this->infoVenta->boleta_compran_nombre;
       <br>
       <br>
       <br>
-      <br>
-      <br>
-      <br>
-      <br>
       <!-- Información -->
-      <span style="font-size: 27px; font-weight: bold; color:#fff"><?= $nombre ?></span>
+      <span style="font-size: 25px; font-weight: bold; color:#fff"><?= $nombre ?></span>
       <br>
       <br>
-      <span style="font-size: 25px; color: #ffcc00; font-weight: 500;"><?= $evento ?></span>
-      <br>
-
-      <span style="font-size: 25px; color: #FFF; font-weight: 500;"><?= "$dia de $mes de $anio"; ?></span>
-      <br>
-      <span style="font-size: 19px;color: #FFF; font-weight: 500;">$<?= $precio >= 0 ? number_format($precio * $cantidad) : $precio   ?> más servicio de $ <?= $servicio >= 0 ? number_format($servicio * $cantidad) : $servicio   ?> (IVA Incluido)</span>
-      <br>
+      <span style="font-size: 21px; color: #ffcc00; font-weight: 500;"><?= $evento ?></span>
       <br>
 
-      <table border="0" valign="top" align="center" width="90%">
+      <span style="font-size: 21px; color: #FFF; font-weight: 500;"><?= "$dia de $mes de $anio"; ?></span>
+      <br>
+      <span style="font-size: 21px;color: #FFF; font-weight: 500;">$<?= $precio >= 0 ? number_format($precio) : $precio   ?> más servicio de $ <?= $servicio >= 0 ? number_format($servicio) : $servicio   ?> (IVA Incluido)</span>
+      <br>
+      <br>
+    
+      <table border="0" valign="top" align="center" width="100%">
         <tr>
-          <td width="70%" align="right">
-            <br>
-            <br>
-            <br>
-            <div align="center" style="text-align:end; font-size: 25px; color: #ffcc00; font-weight: 500;">
-              <!-- Galería Cafe Libro -->
-              <?= $lugar ?>
-            </div>
 
-          </td>
           <!-- Celda con el identificador -->
-          <td width="30%">
-            <img src="<?= IMAGE_QRS_PATH . $this->ticket->ticket_uid . ".png" ?>" alt="qr" width="140" height="140" />
+          <td width="100%">
+            <img src="<?= IMAGE_QRS_PATH . $this->ticket->ticket_uid . ".png" ?>" alt="qr" width="250" height="250" />
 
           </td>
         </tr>
       </table>
-
+      <br>
+      <br>
+      <span style="text-align:end; font-size: 18px; color: #ffcc00; font-weight: 500;">
+        <!-- Galería Cafe Libro -->
+        <?= $lugar ?>
+      </span>
       <br>
       <br>
       <div style="font-size: 16px; color: #FFF;">
-        <?php if ($this->infoVenta->programacion_bono == 1) { ?>
-          El ingreso es únicamente para mayores de 18 años.<br />
-          Te recomendamos llegar al teatro 30 minutos antes de la función.<br />
-          Te recordamos que solo se permite el ingreso al teatro hasta 10 minutos después de iniciada la función.<br />
-          Dudas o problemas puedes escribir a nuestro PQR (+57) 3045538387.
-        <?php } else { ?>
-          El ingreso es únicamente para mayores de 18 años.<br />
-          Te recomendamos llegar al teatro 30 minutos antes de la función.<br />
-          Te recordamos que solo se permite el ingreso al teatro hasta 10 minutos después de iniciada la función.<br />
-          Dudas o problemas puedes escribir a nuestro PQR (+57) 3045538387.
-        <?php }   ?>
+        <?php if ($this->infoVenta->programacion_bono != 1) { ?>
+          El valor de la boleta no es consumible.<br />
+          Aplican términos y condiciones detallados en la publicación del evento.<br />
+        <?php } ?>
       </div>
     </td>
   </tr>

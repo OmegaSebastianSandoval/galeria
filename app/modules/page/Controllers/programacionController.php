@@ -450,12 +450,12 @@ class Page_programacionController extends Page_mainController
 	{
 		ini_set("memory_limit", "-1");
 
-	
-		// $id = 19038;
-		/*  $id = 19040;
-		$id = 19046;
-		$id = 19049; */
-		$id = 19837;
+
+		//$id = 19845;
+		// $id = 19843;
+		$id = 19842;
+		//  $id = 19841;
+
 
 		$this->enviarBoleteria($id);
 	}
@@ -523,9 +523,9 @@ class Page_programacionController extends Page_mainController
 				"telefono" => $infoVenta->boleta_compra_telefono,
 				"estado" => $ticket->ticket_estado,
 			];
-			if($infoVenta->programacion_bono==1){
+			if ($infoVenta->programacion_bono == 1) {
 				$this->generarpdfs($infoVenta, $ticket);
-			}else{
+			} else {
 				$this->generarpdfs($infoVenta, $ticket);
 			}
 		}
@@ -566,36 +566,73 @@ class Page_programacionController extends Page_mainController
 		$this->_view->ticket = $ticket;
 		$this->_view->infoVenta = $infoVenta;
 
-		// Crear nueva instancia de TCPDF
 		$pdf = new MYPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-		// Establece márgenes en 0
 		$pdf->SetMargins(10, 10, 10);
 		$pdf->SetHeaderMargin(0);
 		$pdf->SetFooterMargin(0);
-
-		// Desactiva el auto page break para evitar márgenes adicionales
 		$pdf->SetAutoPageBreak(false, 0);
-
-		// set image scale factor
 		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-		// Agregar una página
 		$pdf->AddPage();
-
-		// Escribir contenido en el PDF
 		$pdf->SetFont('helvetica', '', 12);
 		$content = $this->_view->getRoutPHP('modules/page/Views/template/generarpdf.php');
-		// echo $content;
 		$pdf->writeHTML($content, true, false, true, false, '');
-		ob_clean();
+			// Si es un bono, agregamos la página de términos
+	if ($infoVenta->programacion_bono == 1) {
+		$terminos = $this->_view->getRoutPHP('modules/page/Views/template/terminos.php');
 
-		// Salvar el archivo o mostrarlo en el navegador
+		$pdf->AddPage(); // 👈 Agrega nueva página
+		$pdf->SetFont('helvetica', '', 10); // Opcionalmente puedes poner otra fuente o tamaño
+
+		$pdf->writeHTML($terminos, true, false, true, false, ''); // 👈 Escribe términos
+	}
+		ob_clean();
 		$name = PDFS_PATH . "ticket_{$ticket->ticket_uid}.pdf";
-		$pdf->Output($name, 'F'); // 'I' para mostrar en navegador, 'D' para descargar
+		$pdf->SetTitle("Ticket {$ticket->ticket_uid}");
+
+		$pdf->Output($name, 'F');
 	}
 
+	public function testpdfAction()
+{
+	$this->setLayout('blanco');
+	$ticketModel = new Administracion_Model_DbTable_Tickets();
+	$boletacompraModel = new Page_Model_DbTable_Boletacompra();
 
+	$ticket = $ticketModel->getById(102);
+	$infoVenta = $boletacompraModel->getVentaInfo($ticket->ticket_compra_id);
+	$this->_view->ticket = $ticket;
+	$this->_view->infoVenta = $infoVenta;
+
+	$pdf = new MYPDF('L', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+	$pdf->SetMargins(10, 10, 10);
+	$pdf->SetHeaderMargin(0);
+	$pdf->SetFooterMargin(0);
+	$pdf->SetAutoPageBreak(false, 0);
+	$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+	// Primera página
+	$pdf->AddPage();
+	$pdf->SetFont('helvetica', '', 12);
+	$content = $this->_view->getRoutPHP('modules/page/Views/template/generarpdf.php');
+	$pdf->writeHTML($content, true, false, true, false, '');
+
+	// Si es un bono, agregamos la página de términos
+	if ($infoVenta->programacion_bono == 1) {
+		$terminos = $this->_view->getRoutPHP('modules/page/Views/template/terminos.php');
+
+		$pdf->AddPage(); // 👈 Agrega nueva página
+		$pdf->SetFont('helvetica', '', 10); // Opcionalmente puedes poner otra fuente o tamaño
+
+		$pdf->writeHTML($terminos, true, false, true, false, ''); // 👈 Escribe términos
+	}
+
+	ob_clean();
+	$name = PDFS_PATH . "ticket_{$ticket->ticket_uid}.pdf";
+	$pdf->SetTitle("Ticket {$ticket->ticket_uid}");
+	$pdf->Output($name, 'I');
+}
 	public function reenviarqrAction($id)
 	{
 

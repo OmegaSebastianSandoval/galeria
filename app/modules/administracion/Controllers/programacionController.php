@@ -230,6 +230,16 @@ class Administracion_programacionController extends Administracion_mainControlle
 		$id = $this->_getSanitizedParam("id");
 		$evento = $this->mainModel->getById($id);
 		$ticketsModel = new Administracion_Model_DbTable_Tickets();
+		$boletaCompraModel = new Page_Model_DbTable_Boletacompra();
+		$ticketsEvento = $ticketsModel->getList("ticket_evento_id = '$id'");
+
+		foreach ($ticketsEvento as $key => $ticekt) {
+			$compraId = $ticekt->ticket_compra_id;
+			$infoVenta = $boletaCompraModel->getVentaInfo($compraId);
+			$ticekt->boleta_tipo_nombre = $infoVenta->boleta_tipo_nombre;
+			$ticekt->boleta_tipo_id = $infoVenta->boleta_tipo_id;
+
+		}
 		$ticketsTodos = count($ticketsModel->getList("ticket_evento_id = '$id'"));
 		$ticketsValidados = count($ticketsModel->getList("ticket_evento_id = '$id' AND ticket_estado = 2"));
 
@@ -237,7 +247,8 @@ class Administracion_programacionController extends Administracion_mainControlle
 			'programacion_nombre' => mb_convert_encoding($evento->programacion_nombre, 'ISO-8859-1', 'UTF-8'),
 			'programacion_bono' => (int)$evento->programacion_bono,
 			'ticketsValidados' => $ticketsValidados,
-			'ticketsTodos' => $ticketsTodos
+			'ticketsTodos' => $ticketsTodos,
+			'ticketsEvento' => $ticketsEvento,
 		);
 
 		echo json_encode($res);
@@ -284,18 +295,23 @@ class Administracion_programacionController extends Administracion_mainControlle
 
 	public function enlaceAction()
 	{
+
+		error_reporting(E_ALL);
 		$vendedoresModel = new Administracion_Model_DbTable_Vendedores();
 
 		$id = $this->_getSanitizedParam("id");
 		$vendor = $this->_getSanitizedParam('vendor');
 		$list = $vendedoresModel->getById($vendor);
 		$nombre = $list->id;
-		$fecha = date("Ymd");
+		$fecha = date("YmdHis");
 
 		//$texto = "http://newgaleria.galeriacafelibro.com.co/page/programacion/detalle?id=".$id."&vendor=".$vendor;
 		$texto = "https://www.galeriacafelibro.com.co/page/programacion/detalle?vendor=" . $vendor . "&id=" . $id;
 		// $ruta = "http://newgaleria.galeriacafelibro.com.co/images/".$id.".png";
 		$ruta = "/images/" . $nombre . $fecha . ".png";
+		$ruta = $_SERVER['DOCUMENT_ROOT'] . "/images/" . $nombre . $fecha . ".png";
+		$ruta = IMAGE_PATH.$nombre . $fecha . ".png";
+
 		$tamanio = 5;
 		$level = "Q";
 		$framsize = 3;

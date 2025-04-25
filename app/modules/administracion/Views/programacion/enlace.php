@@ -6,7 +6,7 @@
             </div>
         </div>
         <div class="col-md-12 d-flex justify-content-center">
-            <input id="enlace" class="form-control w-50" type="text" value="<?php echo $this->texto ?>">
+            <input id="enlace" class="form-control w-100" type="text" value="<?php echo $this->texto ?>">
         </div>
         <div class="col-md-12 d-flex justify-content-center pt-3">
             <button class="btn btn-copiar btn-success" data-clipboard-target="#enlace">Copiar al portapapeles</button>           

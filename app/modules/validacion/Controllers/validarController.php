@@ -65,7 +65,7 @@ class Validacion_validarController extends Validacion_mainController
 		}
 
 
-		$compra->programacion_fecha = '2025-04-10 23:30:00';
+		// $compra->programacion_fecha = '2025-04-10 23:30:00';
 
 		$estadoFecha = $this->validarFechaEvento($compra->programacion_fecha);
 		$this->_view->infoFecha = $this->getFechasTipos()[$estadoFecha];
