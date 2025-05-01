@@ -235,10 +235,15 @@ class Core_Model_Sendingemail
         $correo = $informacion->info_pagina_correos_contacto;
         $email = $infoVenta->boleta_compra_email;
 
-        /* $this->email->getMail()->addAddress($email,  "Confirmación Galería Cafe Libro");
-        $this->email->getMail()->setFrom($correo, "Confirmación Galería Cafe Libro"); */
+
+  
+        if (APPLICATION_ENV == 'production') {
+            $this->email->getMail()->addBCC($correo, "Confirmación Galeria Cafe Libro");
+
+            $this->email->getMail()->addAddress($email,  "Confirmación Galería Cafe Libro");
+        }
         $this->email->getMail()->addBCC("desarrollo8@omegawebsystems.com", "Confirmación Galeria Cafe Libro");
-        //$this->email->getMail()->addBCC($correo, "Confirmación Galeria Cafe Libro");
+
         $content = $this->_view->getRoutPHP('/../app/modules/page/Views/programacion/generarcorreo.php');
         $this->email->getMail()->Subject = "Envío Boleteria Galería Cafe Libro";
         $this->email->getMail()->msgHTML($content);

@@ -82,7 +82,8 @@ $nombre = $this->infoVenta->boleta_compran_nombre;
 
           <!-- Celda con el identificador -->
           <td width="100%">
-            <img src="<?= IMAGE_QRS_PATH . $this->ticket->ticket_uid . ".png" ?>" alt="qr" width="250" height="250" />
+          <img src="<?= "/images_sales/qrs/".$this->ticket->ticket_uid.".png" ?>" alt="qr" width="250" height="250" />
+
 
           </td>
         </tr>

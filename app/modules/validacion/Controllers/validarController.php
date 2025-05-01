@@ -141,6 +141,17 @@ class Validacion_validarController extends Validacion_mainController
 		$ticketsModel->editField($id, "ticket_ip_validacion", $_SERVER['REMOTE_ADDR']);
 		$ticketsModel->editField($id, "ticket_usuario_validador", $user->user_id);
 
+		$ticketsTotal = $ticketsModel->getList("ticket_compra_id = {$ticketInfo->ticket_compra_id}");
+		$ticketsValidadosPorCompra =  $ticketsModel->getList("ticket_compra_id = {$ticketInfo->ticket_compra_id} AND ticket_estado = 2");
+
+		if (
+			count($ticketsTotal) >= 1 &&
+			(count($ticketsTotal) == count($ticketsValidadosPorCompra))
+		) {
+			$boletaModel = new Page_Model_DbTable_Boletacompra();
+			$boletaModel->editField($ticketInfo->ticket_compra_id, "boleta_compra_validacionentrada", 1);
+		}
+
 		$ticketActualizado = $ticketsModel->getById($id);
 		if ($ticketActualizado->ticket_estado == 2) {
 			$response = [
